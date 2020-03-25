@@ -2,11 +2,12 @@
   "name": "front",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "private": true,
   "scripts": {
-    "start": "nodemon server.js",
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production"
+    "client": "cross-env NODE_ENV=development webpack-dev-server --mode development --devtool inline-source-map --hot",
+    "server": "cross-env NODE_ENV=development nodemon server.js",
+    "dev": "cross-env NODE_ENV=development webpack --mode development",
+    "build": "cross-env NODE_ENV=production webpack --mode production"
   },
   "author": "Alibi Shalgymbay",
   "license": "ISC",
@@ -16,9 +17,16 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.4.2",
     "html-webpack-plugin": "^4.0.1",
+    "mini-css-extract-plugin": "^0.9.0",
     "nodemon": "^2.0.2",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "style-loader": "^1.1.3",
+    "terser-webpack-plugin": "^2.3.5",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }
