@@ -3,4 +3,3 @@ RUN mkdir /go/src/ant-farm
 ADD . /go/src/ant-farm
 WORKDIR /go/src/ant-farm
 RUN go build -o main .
-CMD ["/go/src/ant-farm/main"]
