@@ -7,6 +7,6 @@ services:
             - '8080:8081'
     front:
         build: ./front
-        command: node server.js
+        command: npm run build
         ports:
             - '3500:3000'

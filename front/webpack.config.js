@@ -29,7 +29,7 @@ module.exports = {
     context: path.resolve(__dirname, 'src'),
     mode: 'development',
     entry: {
-        main: './script.js'
+        main: ['@babel/polyfill', './script.js']
     },
     output: {
         filename: filename('js'),
@@ -62,6 +62,22 @@ module.exports = {
     ],
     module: {
         rules: [
+            {
+                test: /fabric(\.min)?\.js$/,
+                use: 'exports-loader?fabric'
+            },
+            {
+                test: /\.js$/, 
+                exclude: /node_modules/,
+                loader: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env'
+                        ]
+                    }
+                }
+            },
             {
                 test: /\.css$/,
                 use: [

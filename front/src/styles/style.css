@@ -1,3 +1,10 @@
-#container {
-    padding: 1em
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #07090A;
+}
+
+#c {
+    margin: 0;
+    overflow: hidden   
 }
