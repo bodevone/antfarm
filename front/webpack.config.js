@@ -90,7 +90,23 @@ module.exports = {
                     },
                     'css-loader'
                 ]
-            }
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                      loader: 'css-loader'
+                    },
+                    {
+                      loader: 'sass-loader',
+                      options: {
+                        sourceMap: true,
+                        // options...
+                      }
+                    }
+                  ]
+              }
         ]
 
     }
