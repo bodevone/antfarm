@@ -41,10 +41,7 @@ document.getElementById("add-room").addEventListener("click", () => {
   rooms.push(c)
 
   c.on('mousedown', function(e) {
-      
-    // e.target should be the circle
-    // var selected = canvas.getActiveObject()
-
+    
     if (selected && selected != c) {
       var temp = order(selected.id, c.id)
       console.log(connections)
@@ -67,6 +64,10 @@ document.getElementById("add-room").addEventListener("click", () => {
           c.lines1.push(line)
           selected.lines2.push(line)
         }
+        line.room1 = c
+        line.room2 = selected
+
+        console.log(line)
 
         line.lockMovementX = true
         line.lockMovementY = true
@@ -75,12 +76,6 @@ document.getElementById("add-room").addEventListener("click", () => {
         line.lockUniScaling = true
         line.lockRotation = true
         line.hasControls = false
-
-        line.on('mousedblclick', function(e) {
-          canvas.remove(connections[id])
-          canvas.renderAll()
-          delete connections[id]
-        })
 
         canvas.add(line)
 
@@ -122,9 +117,10 @@ canvas.on('object:moving', function(e) {
   }
   var length = Math.max(length1, length2)
   for (var i=0; i<length; i++) {
-    // p.lines[i] && p.lines[i].set({ 'x1': p.left + RADIUS, 'y1': p.top + RADIUS })
     p.lines1[i] && p.lines1[i].set({ 'x1': p.left + RADIUS, 'y1': p.top + RADIUS })
+    p.lines1[i] && p.lines1[i].setCoords()
     p.lines2[i] && p.lines2[i].set({ 'x2': p.left + RADIUS, 'y2': p.top + RADIUS })
+    p.lines2[i] && p.lines2[i].setCoords()
   }
   canvas.renderAll()
 })
@@ -136,6 +132,49 @@ function order(num1, num2) {
     return str1 + str2
   }
   return str2 + str1
+}
+
+document.getElementById("delete").addEventListener("click", () => {
+  var act = canvas.getActiveObject()
+  console.log(act)
+  if (act) {
+    if (act.type == "line") {
+      deleteLine(act)
+    } else {
+      canvas.remove(act)
+      selected = false
+      rooms = rooms.filter(item => item.id !== act.id)
+      // Delete line
+      if (act.lines1) {
+        for (var i=0; i<act.lines1.length; i++) {
+          deleteLine(act.lines1[i])
+        }
+      }
+      if (act.lines2) {
+        for (var i=0; i<act.lines2.length; i++) {
+          deleteLine(act.lines2[i])
+        }
+      }
+    }
+  } else {
+    console.log("NO ELEMENT SELECTED")
+  }
+
+  console.log(act)
+})
+
+function deleteLine(act) {
+  canvas.remove(act)
+
+  var room1 = act.room1
+  var room2 = act.room2
+
+  room1.lines1 = room1.lines1.filter(line => line.id !== act.id)
+  room1.lines2 = room1.lines2.filter(line => line.id !== act.id)
+  room2.lines1 = room2.lines1.filter(line => line.id !== act.id)
+  room2.lines2 = room2.lines2.filter(line => line.id !== act.id)
+
+  delete connections[act.id]
 }
 
 
