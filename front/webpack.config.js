@@ -38,8 +38,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json'],
         alias: {
-            '@': path.resolve(__dirname, 'src'),
-            '@modules': path.resolve(__dirname, 'node_modules')
+            '@': path.resolve(__dirname, 'src')
         }
     },
     devServer: {
