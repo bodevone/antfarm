@@ -6,18 +6,17 @@
   <link href="main.css" rel="stylesheet"></head>
   <body>
     <div id="nav-div">
-      <nav class="navbar" role="navigation" aria-label="main navigation">
-        <!-- <div class="navbar-brand">
-          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div> -->
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        
       
         <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-start">
-            
+          <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+              AntFarm
+            </a>
+          </div>
+
+          <div class="navbar-start">  
             <div class="buttons">
               <a class="navbar-item button is-primary" id="add-room">
                 <strong>Add Room</strong>
@@ -25,6 +24,12 @@
               <a class="navbar-item button is-danger" id="delete">
                 <strong>Delete</strong>
               </a>
+              <div class="navbar-menu">
+                <div class="navbar-item">
+                  Ants
+                </div>
+                <input class="slider is-warning" type="range" id="vol" name="vol" step="100" min="1" max="1000">
+              </div>
             </div>
       
             <!-- <a class="navbar-item">
@@ -54,18 +59,15 @@
             </div> -->
           </div>
       
-          <!-- <div class="navbar-end">
+          <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-primary">
-                  <strong>Sign up</strong>
-                </a>
-                <a class="button is-light">
-                  Log in
+                <a class="button is-primary" id="start">
+                  <strong>Start</strong>
                 </a>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
       </nav>
     </div>

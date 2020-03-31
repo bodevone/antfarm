@@ -1,7 +1,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background-color: #07090A;
+    background-color: #272727;
 }
 
 #c {
@@ -9,6 +9,6 @@ body {
     overflow: hidden   
 }
 
-#navbarBasicExample {
-    background-color: #58595C;
-}
+/* #navbarBasicExample {
+    background-color: #747474;
+} */

@@ -2,6 +2,8 @@ import * as fabric from 'fabric'
 
 import '@/styles/style.css'
 import '@/styles/style.scss'
+// import "@modules/bulma-extensions/dist/bulma-extensions.min.css"
+
 
 
 // create a wrapper around native canvas element (with id="c")
@@ -9,8 +11,12 @@ var canvas = new fabric.Canvas('c')
 canvas.setDimensions({width:window.innerWidth, height:window.innerHeight})
 
 const RADIUS = 50
-const LEFT = 100
-const TOP = 100
+const LEFT = 500
+const TOP = 200
+const COLORMAIN = '#FF652F'
+const COLOR = '#FFE400'
+const ANT = '#14A76C'
+const CONNECTION = '#747474'
 
 var rooms = []
 var connections = {}
@@ -18,15 +24,19 @@ var connections = {}
 var selected = false
 var id = 0
 
-document.getElementById("add-room").addEventListener("click", () => {
+newRoom(LEFT-200, TOP, COLORMAIN)
+newRoom(LEFT+200, TOP, COLORMAIN)
 
+document.getElementById("add-room").addEventListener("click", () => {
+  newRoom(LEFT, TOP, COLOR)
+})
+
+function newRoom(left, top, color) {
   var c = new fabric.Circle({
     radius: RADIUS,
-    stroke: '#666',
-    strokeWidth: 5,
-    fill: '#fff',
-    left: LEFT,
-    top: TOP,
+    fill: color,
+    left: left,
+    top: top,
     id: id
   })
   console.log(c)
@@ -40,6 +50,13 @@ document.getElementById("add-room").addEventListener("click", () => {
   canvas.add(c)
   rooms.push(c)
 
+  canvas.setActiveObject(c)
+
+  clickRoom(c)
+}
+
+function clickRoom(c) {
+
   c.on('mousedown', function(e) {
     
     if (selected && selected != c) {
@@ -48,7 +65,7 @@ document.getElementById("add-room").addEventListener("click", () => {
       if (!(temp in connections)) {
         if (selected.id < c.id) {
           var line = new fabric.Line([selected.left+RADIUS, selected.top+RADIUS, c.left+RADIUS, c.top+RADIUS], {
-            stroke: 'red',
+            stroke: CONNECTION,
             strokeWidth: 10,
             evented: true,
             id: temp
@@ -57,7 +74,7 @@ document.getElementById("add-room").addEventListener("click", () => {
           c.lines2.push(line)
         } else {
           var line = new fabric.Line([c.left+RADIUS, c.top+RADIUS, selected.left+RADIUS, selected.top+RADIUS], {
-            stroke: 'red',
+            stroke: CONNECTION,
             strokeWidth: 10,
             id: temp
           })
@@ -91,7 +108,7 @@ document.getElementById("add-room").addEventListener("click", () => {
       selected = c
     }
   })
-})
+}
 
 canvas.on('mouse:up', function(e) {
   var p = e.target
@@ -141,18 +158,22 @@ document.getElementById("delete").addEventListener("click", () => {
     if (act.type == "line") {
       deleteLine(act)
     } else {
-      canvas.remove(act)
-      selected = false
-      rooms = rooms.filter(item => item.id !== act.id)
-      // Delete line
-      if (act.lines1) {
-        for (var i=0; i<act.lines1.length; i++) {
-          deleteLine(act.lines1[i])
+      if (act.id == 0 || act.id == 1) {
+        console.log("HOME ROOMS")
+      } else {
+        canvas.remove(act)
+        selected = false
+        rooms = rooms.filter(item => item.id !== act.id)
+        // Delete line
+        if (act.lines1) {
+          for (var i=0; i<act.lines1.length; i++) {
+            deleteLine(act.lines1[i])
+          }
         }
-      }
-      if (act.lines2) {
-        for (var i=0; i<act.lines2.length; i++) {
-          deleteLine(act.lines2[i])
+        if (act.lines2) {
+          for (var i=0; i<act.lines2.length; i++) {
+            deleteLine(act.lines2[i])
+          }
         }
       }
     }
@@ -176,5 +197,21 @@ function deleteLine(act) {
 
   delete connections[act.id]
 }
+
+document.getElementById("start").addEventListener("click", () => {
+  var data = {}
+  data.rooms = []
+  for (var room of rooms) {
+    data.rooms.push(room.id)
+  }
+
+  data.connections = []
+
+  for (var connection in connections) {
+    data.connections.push(connection)
+  }
+
+  console.log(data)
+})
 
 
