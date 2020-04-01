@@ -9,6 +9,8 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
+	solver "./lib"
 )
 
 func homeLink(w http.ResponseWriter, r *http.Request) {
@@ -17,17 +19,46 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func createEvent(w http.ResponseWriter, r *http.Request) {
-	// var newEvent event
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Kindly enter data with the event title and description only in order to update")
 	}
 
-	// json.Unmarshal(reqBody, &newEvent)
-	// events = append(events, newEvent)
-	fmt.Println(reqBody)
 	w.WriteHeader(http.StatusCreated)
+
+	solver.InitGraph()
+	solver.ParseData(reqBody)
+
+	Solve()
+
+	dataToSend := SendData()
+
 	json.NewEncoder(w).Encode(reqBody)
+
+}
+
+// Solve Graph
+func Solve() {
+
+	solver.AddNeighbours()
+	solver.PrintAll()
+
+	if solver.StartEndConnected() {
+		solver.PrintStartEnd()
+		return
+	}
+
+	solver.FindPaths()
+	occured, message := solver.GetError()
+	if occured {
+		fmt.Println("ERROR: " + message)
+		return
+	}
+
+	solver.FindPathsCombn()
+	solver.FindSolution()
+	solver.GetSolution()
+
 }
 
 func main() {

@@ -200,6 +200,7 @@ function deleteLine(act) {
 
 document.getElementById("start").addEventListener("click", () => {
   var data = {}
+  data.ants = 10
   data.rooms = []
   for (var room of rooms) {
     data.rooms.push(room.id)
