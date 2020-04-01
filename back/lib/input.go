@@ -27,7 +27,7 @@ func ParseData(reqBody []byte) {
 	for _, r := range data.Rooms {
 
 		name := strconv.Itoa(r)
-		room := &Room{name: name}
+		room := &Room{Name: name}
 		graph.rooms[name] = room
 		if r == 0 {
 			graph.start = *room

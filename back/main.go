@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -31,9 +30,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 
 	Solve()
 
-	dataToSend := SendData()
-
-	json.NewEncoder(w).Encode(reqBody)
+	solver.SendData(w)
 
 }
 
@@ -41,7 +38,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 func Solve() {
 
 	solver.AddNeighbours()
-	solver.PrintAll()
+	// solver.PrintAll()
 
 	if solver.StartEndConnected() {
 		solver.PrintStartEnd()
@@ -49,16 +46,13 @@ func Solve() {
 	}
 
 	solver.FindPaths()
-	occured, message := solver.GetError()
-	if occured {
-		fmt.Println("ERROR: " + message)
-		return
+
+	occured := solver.GetError()
+	if !occured {
+		solver.FindPathsCombn()
+		solver.FindSolution()
+		solver.GetSolution()
 	}
-
-	solver.FindPathsCombn()
-	solver.FindSolution()
-	solver.GetSolution()
-
 }
 
 func main() {

@@ -38,14 +38,14 @@ type Path struct {
 
 // Room represents room with x and y values
 type Room struct {
-	name       string
+	Name       string
 	neighbours []string
 }
 
 // Link represents links between two rooms
 type Link struct {
-	room1 string
-	room2 string
+	Room1 string
+	Room2 string
 }
 
 // Error in order to handle error
@@ -63,8 +63,8 @@ func SetError(message string) {
 }
 
 // GetError to check if Error exists
-func GetError() (bool, string) {
-	return error.occured, error.message
+func GetError() bool {
+	return error.occured
 }
 
 var graph Graph
@@ -72,14 +72,15 @@ var graph Graph
 // InitGraph to make map filed in Graph
 func InitGraph() {
 	graph = Graph{}
+	error = Error{}
 	graph.rooms = make(map[string]*Room)
 }
 
 // AddNeighbours adds adjacent Rooms to the given Room
 func AddNeighbours() {
 	for _, link := range graph.links {
-		graph.rooms[link.room1].neighbours = append(graph.rooms[link.room1].neighbours, link.room2)
-		graph.rooms[link.room2].neighbours = append(graph.rooms[link.room2].neighbours, link.room1)
+		graph.rooms[link.Room1].neighbours = append(graph.rooms[link.Room1].neighbours, link.Room2)
+		graph.rooms[link.Room2].neighbours = append(graph.rooms[link.Room2].neighbours, link.Room1)
 	}
 
 	// for _, room := range graph.rooms {
@@ -90,15 +91,15 @@ func AddNeighbours() {
 	// 	fmt.Println()
 	// }
 
-	graph.start = *graph.rooms[graph.start.name]
-	graph.end = *graph.rooms[graph.end.name]
+	graph.start = *graph.rooms[graph.start.Name]
+	graph.end = *graph.rooms[graph.end.Name]
 
 }
 
 // StartEndConnected to check if start and end rooms are connected
 func StartEndConnected() bool {
 	for _, link := range graph.links {
-		if (link.room1 == graph.start.name && link.room2 == graph.end.name) || (link.room2 == graph.start.name && link.room1 == graph.end.name) {
+		if (link.Room1 == graph.start.Name && link.Room2 == graph.end.Name) || (link.Room2 == graph.start.Name && link.Room1 == graph.end.Name) {
 			return true
 		}
 	}
@@ -111,7 +112,7 @@ func PrintStartEnd() {
 		if i > 1 {
 			fmt.Print(" ")
 		}
-		fmt.Print("L" + strconv.Itoa(i) + "-" + graph.end.name)
+		fmt.Print("L" + strconv.Itoa(i) + "-" + graph.end.Name)
 	}
 	fmt.Println()
 }
@@ -122,7 +123,7 @@ var visited []string
 func FindPaths() {
 
 	path := []string{}
-	dfs(graph.start.name, path)
+	dfs(graph.start.Name, path)
 
 	// fmt.Print("Paths: ")
 	// fmt.Println(graph.paths)
@@ -157,7 +158,7 @@ func dfs(roomName string, path []string) {
 
 	room := *graph.rooms[roomName]
 	path = append(path, roomName)
-	if roomName == graph.end.name {
+	if roomName == graph.end.Name {
 		var newPath []string
 		for _, s := range path {
 			newPath = append(newPath, s)
@@ -267,14 +268,14 @@ func PrintAll() {
 	fmt.Println(graph.ants)
 
 	fmt.Println("##start")
-	fmt.Print(graph.start.name)
+	fmt.Print(graph.start.Name)
 	fmt.Print(" ")
 	fmt.Print(" ")
 	fmt.Println()
 
 	for r := range graph.rooms {
-		if r != graph.start.name && r != graph.end.name {
-			fmt.Print(graph.rooms[r].name)
+		if r != graph.start.Name && r != graph.end.Name {
+			fmt.Print(graph.rooms[r].Name)
 			fmt.Print(" ")
 			fmt.Print(" ")
 			fmt.Println()
@@ -282,15 +283,15 @@ func PrintAll() {
 	}
 
 	fmt.Println("##end")
-	fmt.Print(graph.end.name)
+	fmt.Print(graph.end.Name)
 	fmt.Print(" ")
 	fmt.Print(" ")
 	fmt.Println()
 
 	for _, link := range graph.links {
-		fmt.Print(link.room1)
+		fmt.Print(link.Room1)
 		fmt.Print("-")
-		fmt.Print(link.room2)
+		fmt.Print(link.Room2)
 		fmt.Println()
 	}
 
@@ -398,6 +399,7 @@ func GetSolution() {
 			}
 		}
 
+		steps := make(map[int]string)
 		notFirst := false
 		for _, ant := range movingAnts {
 			if notFirst {
@@ -405,8 +407,10 @@ func GetSolution() {
 			}
 			answer[i] += "L" + strconv.Itoa(ant) + "-" + string(graph.mapPaths[antsPath[ant-1]].path[ants[ant-1]])
 			notFirst = true
+			steps[ant] = string(graph.mapPaths[antsPath[ant-1]].path[ants[ant-1]])
 		}
 
+		graph.steps = append(graph.steps, steps)
 		movingAnts = movingAntsNext
 	}
 	for _, ans := range answer {
