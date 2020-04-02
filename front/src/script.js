@@ -216,21 +216,30 @@ document.getElementById("start").addEventListener("click", () => {
 
   const URL = 'http://localhost:8080/algo'
 
-  fetch(URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    console.log('Success:', data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  })
+  // fetch(URL, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(data),
+  // })
+  // .then((response) => response.json())
+  // .then((data) => {
+  //   console.log('Success:', data);
+  // })
+  // .catch((error) => {
+  //   console.error('Error:', error);
+  // })
 
+
+  var dataNew = {
+    "Error":false,
+    "ErrorMessage":"",
+    "Iterations":11,
+    "Steps":[{"1":"3"},{"1":"1","2":"3"},{"2":"1","3":"3"},{"3":"1","4":"3"},{"4":"1","5":"3"},{"5":"1","6":"3"},{"6":"1","7":"3"},{"7":"1","8":"3"},{"8":"1","9":"3"},{"10":"3","9":"1"},{"10":"1"}]
+  }
+
+  console.log(dataNew)
 })
 
 

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	solver "./lib"
+	solver "ant-farm/internal/solver"
 )
 
 func homeLink(w http.ResponseWriter, r *http.Request) {
@@ -42,17 +42,17 @@ func Solve() {
 
 	if solver.StartEndConnected() {
 		solver.PrintStartEnd()
-		return
+	} else {
+		solver.FindPaths()
+
+		occured := solver.GetError()
+		if !occured {
+			solver.FindPathsCombn()
+			solver.FindSolution()
+			solver.GetSolution()
+		}
 	}
 
-	solver.FindPaths()
-
-	occured := solver.GetError()
-	if !occured {
-		solver.FindPathsCombn()
-		solver.FindSolution()
-		solver.GetSolution()
-	}
 }
 
 func main() {

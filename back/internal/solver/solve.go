@@ -108,13 +108,17 @@ func StartEndConnected() bool {
 
 // PrintStartEnd to print result if start and end connected
 func PrintStartEnd() {
+	graph.iterations = 1
+	steps := make(map[int]string)
 	for i := 1; i <= graph.ants; i++ {
 		if i > 1 {
 			fmt.Print(" ")
 		}
 		fmt.Print("L" + strconv.Itoa(i) + "-" + graph.end.Name)
+		steps[i] = graph.end.Name
 	}
 	fmt.Println()
+	graph.steps = append(graph.steps, steps)
 }
 
 var visited []string
