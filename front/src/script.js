@@ -8,18 +8,21 @@ import '@/styles/style.scss'
 
 // create a wrapper around native canvas element (with id="c")
 var canvas = new fabric.Canvas('c')
+canvas.selection = false
 canvas.setDimensions({width:window.innerWidth, height:window.innerHeight})
 
 const RADIUS = 50
+const RADIUSANT = 20
 const LEFT = 500
 const TOP = 200
 const COLORMAIN = '#FF652F'
 const COLOR = '#FFE400'
-const ANT = '#14A76C'
+const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
 
-var rooms = []
+var rooms = {}
 var connections = {}
+var data = {}
 
 var selected = false
 var id = 0
@@ -39,16 +42,18 @@ function newRoom(left, top, color) {
     top: top,
     id: id
   })
-  console.log(c)
-  id++
-    
+  console.log(c)    
   c.hasControls = false
 
   c.lines1 = []
   c.lines2 = []
 
+  
   canvas.add(c)
-  rooms.push(c)
+  canvas.bringToFront(c)
+  rooms[id] = c
+  id++
+
 
   canvas.setActiveObject(c)
 
@@ -67,7 +72,6 @@ function clickRoom(c) {
           var line = new fabric.Line([selected.left+RADIUS, selected.top+RADIUS, c.left+RADIUS, c.top+RADIUS], {
             stroke: CONNECTION,
             strokeWidth: 10,
-            evented: true,
             id: temp
           })
           selected.lines1.push(line)
@@ -95,6 +99,7 @@ function clickRoom(c) {
         line.hasControls = false
 
         canvas.add(line)
+        canvas.sendToBack(line)
 
         var name = order(selected.id, c.id)
         connections[name] = line
@@ -163,7 +168,9 @@ document.getElementById("delete").addEventListener("click", () => {
       } else {
         canvas.remove(act)
         selected = false
-        rooms = rooms.filter(item => item.id !== act.id)
+        // rooms = rooms.filter(item => item.id !== act.id)
+        delete rooms[act.id]
+
         // Delete line
         if (act.lines1) {
           for (var i=0; i<act.lines1.length; i++) {
@@ -198,48 +205,160 @@ function deleteLine(act) {
   delete connections[act.id]
 }
 
+var output = {}
+
 document.getElementById("start").addEventListener("click", () => {
-  var data = {}
   data.ants = 10
   data.rooms = []
-  for (var room of rooms) {
-    data.rooms.push(room.id)
+  for (var id in rooms) {
+    data.rooms.push(parseInt(id))
   }
 
   data.connections = []
-
   for (var connection in connections) {
     data.connections.push(connection)
   }
 
   console.log(data)
 
-  const URL = 'http://localhost:8080/algo'
+  const URL = 'http://localhost:8081/algo'
+  // const URL = 'http://localhost:8080/algo'
 
-  // fetch(URL, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(data),
-  // })
-  // .then((response) => response.json())
-  // .then((data) => {
-  //   console.log('Success:', data);
-  // })
-  // .catch((error) => {
-  //   console.error('Error:', error);
-  // })
+  fetch(URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then((response) => response.json())
+  .then((newData) => {
+    console.log('Success:', newData)
+    output = newData
+    animateSetup()
+  })
+  .catch((error) => {
+    console.error('Error:', error)
+  })
 
 
-  var dataNew = {
-    "Error":false,
-    "ErrorMessage":"",
-    "Iterations":11,
-    "Steps":[{"1":"3"},{"1":"1","2":"3"},{"2":"1","3":"3"},{"3":"1","4":"3"},{"4":"1","5":"3"},{"5":"1","6":"3"},{"6":"1","7":"3"},{"7":"1","8":"3"},{"8":"1","9":"3"},{"10":"3","9":"1"},{"10":"1"}]
-  }
+  // var dataNew = {
+  //   "Error":false,
+  //   "ErrorMessage":"",
+  //   "Iterations":11,
+  //   "Steps":[{"1":"3"},{"1":"1","2":"3"},{"2":"1","3":"3"},{"3":"1","4":"3"},{"4":"1","5":"3"},{"5":"1","6":"3"},{"6":"1","7":"3"},{"7":"1","8":"3"},{"8":"1","9":"3"},{"10":"3","9":"1"},{"10":"1"}]
+  // }
 
-  console.log(dataNew)
+
 })
 
+var ants = {}
+var antsInitPos = {}
+var antPrevRoom = {}
+var end = 100
+var animated = []
+
+function animateSetup() {
+  if (output.Error) {
+    console.log(output.ErrorMessage)
+  } else {
+    console.log(output.Steps)
+
+    lockCanvas()
+
+    var left = rooms[0].left + RADIUS - RADIUSANT
+    var top = rooms[0].top + RADIUS - RADIUSANT
+
+    for (var i=0; i<data.ants; i++) {
+      var ant
+      if (i==0) {
+        ant = new fabric.Circle({
+          radius: RADIUSANT,
+          fill: 'red',
+          left: left,
+          top: top,
+          hasControls: false,
+          evented: false
+        })
+      } else {
+        ant = new fabric.Circle({
+          radius: RADIUSANT,
+          fill: COLORANT,
+          left: left,
+          top: top,
+          hasControls: false,
+          evented: false
+        })
+      }
+      ants[i+1] = ant
+      antPrevRoom[i+1] = rooms[0]
+      canvas.add(ant)
+    }
+
+    for (var i=0; i<=output.Steps.length; i++) {
+      animated.push(false)
+    }
+    
+    setTimeout(animate(0), 1000)
+    
+  }
+}
+
+function animate(i) {
+  var len = 0
+  for (var o in output.Steps[i]) {
+    len++
+  }
+  var curr = 0
+  for (const [ant, room] of Object.entries(output.Steps[i])) {
+    curr++    
+    animateAnt(ant, room, i, curr==len)
+
+  }
+}
+
+function animateAnt(ant, room, i, last) {
+
+  var fromX = antPrevRoom[ant].left + RADIUS - RADIUSANT
+  var fromY = antPrevRoom[ant].top + RADIUS - RADIUSANT
+
+  var toX = rooms[room].left + RADIUS - RADIUSANT
+  var toY = rooms[room].top + RADIUS - RADIUSANT
+
+  var dx = (toX - fromX) / end
+  var dy = (toY - fromY) / end
+
+  fabric.util.animate({
+    startValue: 0,
+    endValue: end,
+    duration: 1000,
+    onChange: function(value) {
+      
+      var x = dx * value
+      var y = dy * value
+
+      ants[ant].set({left: fromX + x, top: fromY + y})
+      if (last) {
+        ants[ant].setCoords()
+        canvas.renderAll()
+      }
+    },
+    onComplete: function() {
+      if (output.Steps[i] && output.Steps[i+1] && !animated[i]) {
+        for (const [ant, room] of Object.entries(output.Steps[i])) {
+          antPrevRoom[ant] = rooms[room]
+        }
+        animated[i] = true
+        setTimeout(animate(i+1), 1000)
+      }
+    }
+  })
+}
+
+function lockCanvas() {
+  for (var id in rooms) {
+    rooms[id].hasControls = false
+    rooms[id].evented = false
+  }
+}
 
