@@ -4,6 +4,12 @@ body {
     background-color: #272727;
 }
 
+#logo {
+    background-image: url(72f350a5d0dec8dac6e2fa23280445cc.png);
+    background-size: 100% 100%;
+    width: 56px;
+}
+
 /* #show {
     position: absolute;
     left: 50%;
@@ -15,10 +21,6 @@ body {
     margin: 0;
     overflow: hidden   
 }
-
-/* #navbarBasicExample {
-    background-color: #747474;
-} */
 
 input[type="range"] {
     -webkit-appearance: none;
