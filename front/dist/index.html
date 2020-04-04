@@ -5,6 +5,12 @@
     <title>Ant Farm</title>
   <link href="main.css" rel="stylesheet"></head>
   <body>
+    <div id="show">
+      <!-- <span class="tag is-large is-success">
+        ANIMATION
+      </span> -->
+    </div>
+
     <div id="nav-div">
       <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         
@@ -17,46 +23,25 @@
           </div>
 
           <div class="navbar-start">  
-            <div class="buttons">
-              <a class="navbar-item button is-primary" id="add-room">
-                <strong>Add Room</strong>
-              </a>
-              <a class="navbar-item button is-danger" id="delete">
-                <strong>Delete</strong>
-              </a>
-              <div class="navbar-menu">
-                <div class="navbar-item">
-                  Ants
-                </div>
-                <input class="slider is-warning" type="range" id="vol" name="vol" step="100" min="1" max="1000">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-primary" id="add-room">
+                  <strong>Add Room</strong>
+                </a>
+                <a class="button is-danger" id="delete">
+                  <strong>Delete</strong>
+                </a>
               </div>
+  
+  
             </div>
-      
-            <!-- <a class="navbar-item">
-              Documentation
-            </a>
-       -->
-            <!-- <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                More
-              </a>
-      
-              <div class="navbar-dropdown">
-                <a class="navbar-item">
-                  About
-                </a>
-                <a class="navbar-item">
-                  Jobs
-                </a>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider">
-                <a class="navbar-item">
-                  Report an issue
-                </a>
-              </div>
-            </div> -->
+            
+            <div class="navbar-item">
+                Ants
+            </div>
+            <div class="navbar-item">
+              <input id="rangePicker" type="range" id="vol" name="vol" step="10" min="0" max="100">
+            </div>
           </div>
       
           <div class="navbar-end">

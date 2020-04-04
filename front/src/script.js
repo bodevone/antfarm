@@ -19,6 +19,7 @@ const COLORMAIN = '#FF652F'
 const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
+const animationText = 'Animation in progress'
 
 var rooms = {}
 var connections = {}
@@ -27,10 +28,16 @@ var data = {}
 var selected = false
 var id = 0
 
+var animation = false
+
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
 
 document.getElementById("add-room").addEventListener("click", () => {
+  if (animation) {
+    show(animationText)
+    return
+  }
   newRoom(LEFT, TOP, COLOR)
 })
 
@@ -52,10 +59,11 @@ function newRoom(left, top, color) {
   canvas.add(c)
   canvas.bringToFront(c)
   rooms[id] = c
+  if (id!=0 && id!=1) {
+    canvas.setActiveObject(c)    
+  }
+
   id++
-
-
-  canvas.setActiveObject(c)
 
   clickRoom(c)
 }
@@ -157,14 +165,18 @@ function order(num1, num2) {
 }
 
 document.getElementById("delete").addEventListener("click", () => {
+  if (animation) {
+    show(animationText)
+    return
+  }
   var act = canvas.getActiveObject()
-  console.log(act)
   if (act) {
     if (act.type == "line") {
       deleteLine(act)
     } else {
       if (act.id == 0 || act.id == 1) {
         console.log("HOME ROOMS")
+        show('Cannot delete main rooms')
       } else {
         canvas.remove(act)
         selected = false
@@ -185,10 +197,8 @@ document.getElementById("delete").addEventListener("click", () => {
       }
     }
   } else {
-    console.log("NO ELEMENT SELECTED")
+    show("No object selected")
   }
-
-  console.log(act)
 })
 
 function deleteLine(act) {
@@ -208,6 +218,12 @@ function deleteLine(act) {
 var output = {}
 
 document.getElementById("start").addEventListener("click", () => {
+  if (animation) {
+    show(animationText)
+
+    console.log("ANIMATION!!!")
+    return
+  }
   data.ants = 10
   data.rooms = []
   for (var id in rooms) {
@@ -239,30 +255,60 @@ document.getElementById("start").addEventListener("click", () => {
   })
   .catch((error) => {
     console.error('Error:', error)
+    show("Error from server")
   })
-
-
-  // var dataNew = {
-  //   "Error":false,
-  //   "ErrorMessage":"",
-  //   "Iterations":11,
-  //   "Steps":[{"1":"3"},{"1":"1","2":"3"},{"2":"1","3":"3"},{"3":"1","4":"3"},{"4":"1","5":"3"},{"5":"1","6":"3"},{"6":"1","7":"3"},{"7":"1","8":"3"},{"8":"1","9":"3"},{"10":"3","9":"1"},{"10":"1"}]
-  // }
-
 
 })
 
+var pressed = false
+function show(textShow) {
+  if (pressed) {
+    return
+  }
+  pressed = true
+  
+  var span = document.createElement('span')
+  span.classList.add('tag', 'is-large', 'is-warning')
+
+  var text = document.createTextNode(textShow)
+  span.appendChild(text)
+
+  var div = document.getElementById('show')
+
+  div.appendChild(span)
+
+  div.style.position = 'absolute'
+  div.style.left = '50%'
+  div.style.zIndex = 100
+  div.style.paddingTop = '5em'
+
+  setTimeout(function() {
+    var op = 1;  // initial opacity
+    var timer = setInterval(() => {
+        if (op <= 0.1){
+            clearInterval(timer)
+            span.remove()
+            div.removeAttribute('style')
+            pressed = false
+        }
+        span.style.opacity = op
+        span.style.filter = 'alpha(opacity=' + op * 100 + ")"
+        op -= op * 0.1
+    }, 30)
+  }, 2000)
+}
+
 var ants = {}
-var antsInitPos = {}
 var antPrevRoom = {}
 var end = 100
 var animated = []
 
 function animateSetup() {
   if (output.Error) {
-    console.log(output.ErrorMessage)
+    show(output.ErrorMessage)
   } else {
     console.log(output.Steps)
+    animation = true
 
     lockCanvas()
 
@@ -270,26 +316,14 @@ function animateSetup() {
     var top = rooms[0].top + RADIUS - RADIUSANT
 
     for (var i=0; i<data.ants; i++) {
-      var ant
-      if (i==0) {
-        ant = new fabric.Circle({
-          radius: RADIUSANT,
-          fill: 'red',
-          left: left,
-          top: top,
-          hasControls: false,
-          evented: false
-        })
-      } else {
-        ant = new fabric.Circle({
-          radius: RADIUSANT,
-          fill: COLORANT,
-          left: left,
-          top: top,
-          hasControls: false,
-          evented: false
-        })
-      }
+      var ant = new fabric.Circle({
+        radius: RADIUSANT,
+        fill: COLORANT,
+        left: left,
+        top: top,
+        hasControls: false,
+        evented: false
+      })
       ants[i+1] = ant
       antPrevRoom[i+1] = rooms[0]
       canvas.add(ant)
@@ -300,7 +334,6 @@ function animateSetup() {
     }
     
     setTimeout(animate(0), 1000)
-    
   }
 }
 
@@ -313,7 +346,6 @@ function animate(i) {
   for (const [ant, room] of Object.entries(output.Steps[i])) {
     curr++    
     animateAnt(ant, room, i, curr==len)
-
   }
 }
 
@@ -344,12 +376,16 @@ function animateAnt(ant, room, i, last) {
       }
     },
     onComplete: function() {
-      if (output.Steps[i] && output.Steps[i+1] && !animated[i]) {
+      if (output.Steps[i] && !animated[i]) {
         for (const [ant, room] of Object.entries(output.Steps[i])) {
           antPrevRoom[ant] = rooms[room]
         }
         animated[i] = true
-        setTimeout(animate(i+1), 1000)
+        if (output.Steps[i+1]) {
+          setTimeout(animate(i+1), 1000)
+        } else {
+          completed()
+        }
       }
     }
   })
@@ -359,6 +395,36 @@ function lockCanvas() {
   for (var id in rooms) {
     rooms[id].hasControls = false
     rooms[id].evented = false
+  }
+  for (var link in connections) {
+    connections[link].hasControls = false
+    connections[link].evented = false
+  }
+}
+
+
+function completed() {
+  console.log("FINISHED")
+
+  animation = false
+  
+  unlockCanvas()
+
+  for (var i=0; i<data.ants; i++) {
+    canvas.remove(ants[i+1])
+  }
+
+  ants = {}
+  antPrevRoom = {}
+  animated = []
+}
+
+function unlockCanvas() {
+  for (var id in rooms) {
+    rooms[id].evented = true
+  }
+  for (var link in connections) {
+    connections[link].evented = true
   }
 }
 
