@@ -2,11 +2,8 @@ import * as fabric from 'fabric'
 
 import '@/styles/style.css'
 import '@/styles/style.scss'
-// import "@modules/bulma-extensions/dist/bulma-extensions.min.css"
 
-
-
-// create a wrapper around native canvas element (with id="c")
+// create a wrapper around native canvas element (with id='c')
 var canvas = new fabric.Canvas('c')
 canvas.selection = false
 canvas.setDimensions({width:window.innerWidth, height:window.innerHeight})
@@ -24,6 +21,7 @@ const animationText = 'Animation in progress'
 var rooms = {}
 var connections = {}
 var data = {}
+data.ants = 1
 
 var selected = false
 var id = 0
@@ -33,7 +31,7 @@ var animation = false
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
 
-document.getElementById("add-room").addEventListener("click", () => {
+document.getElementById('add-room').addEventListener('click', () => {
   if (animation) {
     show(animationText)
     return
@@ -126,7 +124,7 @@ function clickRoom(c) {
 canvas.on('mouse:up', function(e) {
   var p = e.target
   if (p) {
-    if (p.type != "circle") {
+    if (p.type != 'circle') {
       selected = false
     }
   } else {
@@ -164,18 +162,25 @@ function order(num1, num2) {
   return str2 + str1
 }
 
-document.getElementById("delete").addEventListener("click", () => {
+document.getElementById('rangePicker').addEventListener('input', event => {
+  var value = event.target.value
+  data.ants = parseInt(value)
+  var ants = document.getElementById('ants')
+  ants.textContent = value
+})
+
+
+document.getElementById('delete').addEventListener('click', () => {
   if (animation) {
     show(animationText)
     return
   }
   var act = canvas.getActiveObject()
   if (act) {
-    if (act.type == "line") {
+    if (act.type == 'line') {
       deleteLine(act)
     } else {
       if (act.id == 0 || act.id == 1) {
-        console.log("HOME ROOMS")
         show('Cannot delete main rooms')
       } else {
         canvas.remove(act)
@@ -197,7 +202,7 @@ document.getElementById("delete").addEventListener("click", () => {
       }
     }
   } else {
-    show("No object selected")
+    show('No object selected')
   }
 })
 
@@ -217,14 +222,12 @@ function deleteLine(act) {
 
 var output = {}
 
-document.getElementById("start").addEventListener("click", () => {
+document.getElementById('start').addEventListener('click', () => {
   if (animation) {
     show(animationText)
-
-    console.log("ANIMATION!!!")
     return
   }
-  data.ants = 10
+  console.log(data)
   data.rooms = []
   for (var id in rooms) {
     data.rooms.push(parseInt(id))
@@ -255,7 +258,7 @@ document.getElementById("start").addEventListener("click", () => {
   })
   .catch((error) => {
     console.error('Error:', error)
-    show("Error from server")
+    show('Error from server')
   })
 
 })
@@ -292,7 +295,7 @@ function show(textShow) {
             pressed = false
         }
         span.style.opacity = op
-        span.style.filter = 'alpha(opacity=' + op * 100 + ")"
+        span.style.filter = 'alpha(opacity=' + op * 100 + ')'
         op -= op * 0.1
     }, 30)
   }, 2000)
@@ -404,7 +407,6 @@ function lockCanvas() {
 
 
 function completed() {
-  console.log("FINISHED")
 
   animation = false
   
