@@ -224,6 +224,9 @@ function deleteLine(act) {
 
 var output = {}
 
+const isDev = process.env.NODE_ENV === "development"
+const isProd = !isDev
+
 document.getElementById('start').addEventListener('click', () => {
   if (animation) {
     show(animationText)
@@ -242,9 +245,12 @@ document.getElementById('start').addEventListener('click', () => {
 
   console.log(data)
 
-  const URL = 'http://localhost:8081/algo'
-  // const URL = 'http://localhost:8080/algo'
-
+  var URL
+  if (isDev) {
+    URL = 'http://localhost:8081/algo'
+  } else {
+    URL = 'http://localhost:8080/algo'
+  }
   fetch(URL, {
     method: 'POST',
     headers: {
