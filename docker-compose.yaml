@@ -4,9 +4,9 @@ services:
         build: ./back
         command: /go/src/ant-farm/main
         ports:
-            - '80:8081'
+            - '8080:8081'
     front:
         build: ./front
         command: npm run build
         ports:
-            - '3500:3000'
+            - '80:3000'
