@@ -30,6 +30,8 @@ var id = 0
 
 var animation = false
 
+const URL = 'http://165.22.28.236:8080/algo'
+
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
 
@@ -245,14 +247,7 @@ document.getElementById('start').addEventListener('click', () => {
   }
 
   console.log(data)
-
-  // var URL = 'http://localhost:' 
-  var URL = '165.22.28.236:'
-  if (isDev) {
-    URL = URL + '8081/algo'
-  } else {
-    URL = URL + '8080/algo'
-  }
+  
   fetch(URL, {
     method: 'POST',
     headers: {
