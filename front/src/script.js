@@ -3,7 +3,7 @@ import * as fabric from 'fabric'
 import '@/styles/style.css'
 import '@/styles/style.scss'
 
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.png'
 
 // create a wrapper around native canvas element (with id='c')
 var canvas = new fabric.Canvas('c')
@@ -226,6 +226,7 @@ var output = {}
 
 const isDev = process.env.NODE_ENV === "development"
 const isProd = !isDev
+console.log(process.env.SERVER)
 
 document.getElementById('start').addEventListener('click', () => {
   if (animation) {
@@ -245,11 +246,12 @@ document.getElementById('start').addEventListener('click', () => {
 
   console.log(data)
 
-  var URL
+  // var URL = 'http://localhost:' 
+  var URL = '165.22.28.236:'
   if (isDev) {
-    URL = 'http://localhost:8081/algo'
+    URL = URL + '8081/algo'
   } else {
-    URL = 'http://localhost:8080/algo'
+    URL = URL + '8080/algo'
   }
   fetch(URL, {
     method: 'POST',
