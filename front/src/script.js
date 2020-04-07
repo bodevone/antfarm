@@ -39,7 +39,7 @@ var id = 0
 
 var animation = false
 
-const URL = 'https://www.antfarm.ml/api/'
+const URL = 'https://www.antfarm.ml/api'
 
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
