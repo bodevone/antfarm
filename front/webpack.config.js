@@ -50,6 +50,7 @@ module.exports = {
     optimization: optimization(),
     plugins: [
         new HTMLWebpackPlugin({
+            favicon: './assets/favicon.ico',
             template: './index.html',
             minify: {
                 collapseWhitespace: isProd

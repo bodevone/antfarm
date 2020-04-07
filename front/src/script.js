@@ -5,6 +5,7 @@ import '@/styles/style.scss'
 
 import logo from '@/assets/logo.png'
 
+
 // create a wrapper around native canvas element (with id='c')
 var canvas = new fabric.Canvas('c')
 canvas.selection = false
