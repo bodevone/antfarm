@@ -21,5 +21,4 @@ after_success:
     - chmod 600 ./deploy_key
     - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
     - ssh-add ./deploy_key
-    - ssh -i ./deploy_key root@165.22.28.236
-    - pwd
+    - ssh -i ./deploy_key root@165.22.28.236 pwd
