@@ -62,6 +62,6 @@ func main() {
 	origins := handlers.AllowedOrigins([]string{"*"})
 
 	router.HandleFunc("/", homeLink)
-	router.HandleFunc("/algo", createEvent).Methods("POST")
+	router.HandleFunc("/", createEvent).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8081", handlers.CORS(headers, methods, origins)(router)))
 }

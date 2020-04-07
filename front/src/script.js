@@ -39,7 +39,7 @@ var id = 0
 
 var animation = false
 
-const URL = 'https://165.22.28.236:8080/algo'
+const URL = 'https://www.antfarm.ml/algo'
 
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
@@ -237,7 +237,6 @@ var output = {}
 
 const isDev = process.env.NODE_ENV === "development"
 const isProd = !isDev
-console.log(process.env.SERVER)
 
 document.getElementById('start').addEventListener('click', () => {
   if (animation) {
