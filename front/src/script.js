@@ -5,6 +5,14 @@ import '@/styles/style.scss'
 
 import logo from '@/assets/logo.png'
 
+(function() {
+  var burger = document.querySelector('.burger')
+  var menu = document.querySelector('#'+burger.dataset.target);
+  burger.addEventListener('click', function() {
+      burger.classList.toggle('is-active')
+      menu.classList.toggle('is-active')
+  })
+})()
 
 // create a wrapper around native canvas element (with id='c')
 var canvas = new fabric.Canvas('c')
@@ -31,7 +39,7 @@ var id = 0
 
 var animation = false
 
-const URL = 'http://165.22.28.236:8080/algo'
+const URL = 'https://165.22.28.236:8080/algo'
 
 newRoom(LEFT-200, TOP, COLORMAIN)
 newRoom(LEFT+200, TOP, COLORMAIN)
