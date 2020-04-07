@@ -1,2 +1,6 @@
 .DS_Store
 deploy_key
+
+front/node_modules
+front/npm-debug.log
+front/dist
