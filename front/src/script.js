@@ -19,10 +19,18 @@ var canvas = new fabric.Canvas('c')
 canvas.selection = false
 canvas.setDimensions({width:window.innerWidth, height:window.innerHeight})
 
-const RADIUS = 50
-const RADIUSANT = 20
-const LEFT = 500
-const TOP = 200
+//594 x 1280
+
+var height = window.innerHeight
+var width = window.innerWidth
+
+const RADIUS = width / 25
+const RADIUSANT = width / 55
+const LEFT = width / 2 - RADIUS
+const TOP = height / 2 - RADIUS
+const LEFT_MAIN = width / 4 - RADIUS
+const RIGHT_MAIN = 3 * width / 4 - RADIUS
+const LINE_WIDTH = RADIUS / 5
 const COLORMAIN = '#FF652F'
 const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
@@ -41,8 +49,8 @@ var animation = false
 
 const URL = 'https://www.antfarm.ml/api'
 
-newRoom(LEFT-200, TOP, COLORMAIN)
-newRoom(LEFT+200, TOP, COLORMAIN)
+newRoom(LEFT_MAIN, TOP, COLORMAIN)
+newRoom(RIGHT_MAIN, TOP, COLORMAIN)
 
 document.getElementById('add-room').addEventListener('click', () => {
   if (animation) {
@@ -90,7 +98,7 @@ function clickRoom(c) {
         if (selected.id < c.id) {
           var line = new fabric.Line([selected.left+RADIUS, selected.top+RADIUS, c.left+RADIUS, c.top+RADIUS], {
             stroke: CONNECTION,
-            strokeWidth: 10,
+            strokeWidth: LINE_WIDTH,
             id: temp
           })
           selected.lines1.push(line)
