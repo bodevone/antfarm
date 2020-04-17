@@ -68,7 +68,6 @@ function newRoom(left, top, color) {
     top: top,
     id: id
   })
-  console.log(c)    
   c.hasControls = false
 
   c.lines1 = []
@@ -93,7 +92,6 @@ function clickRoom(c) {
     
     if (selected && selected != c) {
       var temp = order(selected.id, c.id)
-      console.log(connections)
       if (!(temp in connections)) {
         if (selected.id < c.id) {
           var line = new fabric.Line([selected.left+RADIUS, selected.top+RADIUS, c.left+RADIUS, c.top+RADIUS], {
@@ -114,8 +112,6 @@ function clickRoom(c) {
         }
         line.room1 = c
         line.room2 = selected
-
-        console.log(line)
 
         line.lockMovementX = true
         line.lockMovementY = true
@@ -251,7 +247,6 @@ document.getElementById('start').addEventListener('click', () => {
     show(animationText)
     return
   }
-  console.log(data)
   data.rooms = []
   for (var id in rooms) {
     data.rooms.push(parseInt(id))
@@ -262,8 +257,6 @@ document.getElementById('start').addEventListener('click', () => {
     data.connections.push(connection)
   }
 
-  console.log(data)
-  
   fetch(URL, {
     method: 'POST',
     headers: {
@@ -273,12 +266,10 @@ document.getElementById('start').addEventListener('click', () => {
   })
   .then((response) => response.json())
   .then((newData) => {
-    console.log('Success:', newData)
     output = newData
     animateSetup()
   })
   .catch((error) => {
-    console.error('Error:', error)
     show('Error from server')
   })
 
@@ -330,7 +321,6 @@ function animateSetup() {
   if (output.Error) {
     show(output.ErrorMessage)
   } else {
-    console.log(output.Steps)
     animation = true
 
     lockCanvas()
