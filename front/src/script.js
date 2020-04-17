@@ -292,10 +292,9 @@ function show(textShow) {
   pressed = true
   
   var span = document.createElement('span')
-  span.classList.add('tag', 'is-large', 'is-warning')
-
   var text = document.createTextNode(textShow)
   span.appendChild(text)
+  span.classList.add('tag', 'is-large', 'is-warning')
 
   var div = document.getElementById('show')
 
@@ -449,5 +448,29 @@ function unlockCanvas() {
   for (var link in connections) {
     connections[link].evented = true
   }
+}
+
+var info = document.querySelector('.info-wrapper')
+var main = document.querySelector('.main')
+
+var infoClosed = false
+
+document.getElementById('info').addEventListener('click', () => {
+  toggleInfo()
+})
+
+document.getElementById('close').addEventListener('click', () => {
+  toggleInfo()
+})
+
+function toggleInfo() {
+  if (infoClosed) {
+    info.classList.remove('disabled')
+    main.classList.add('disabled')
+  } else {
+    info.classList.add('disabled')
+    main.classList.remove('disabled')
+  }
+  infoClosed = !infoClosed
 }
 

@@ -9,68 +9,93 @@
 
   </head>
   <body>
-    <div id="show">
-      <!-- <span class="tag is-large is-success">
-        ANIMATION
-      </span> -->
+    <div class="info-wrapper">
+      <div class="info">
+          <div id="close" class="info-close">X</div>
+          <p style="font-size: 30px; font-weight: 500;">Ant Farm</p>
+          
+          <p style="padding-bottom: 1em;">Visualise the movement of your ants on an ant farm.</p>
+          
+          <p>First of all, you need to create an ant farm by dragging the rooms around.</p>
+          <p>You can either add or delete the room.</p>
+          <p><span style="color: #14A76C; font-weight: 500;">+</span> for adding the room and <span style="color: hsl(348, 100%, 61%); font-weight: 500;">-</span> for deleting the room.</p>
+          <p style="font-style: italic; padding-bottom: 1em;">NOTE: <span style="color: #FF652F; font-weight: 500;">Orange rooms</span> are the main rooms between which movement will be done, therefore they cannot be deleted.</p>
+          <p>Then select two rooms to create connection between them.</p>
+          <p style="padding-bottom: 1em;"><span style="color: hsl(348, 100%, 61%); font-weight: 500;">-</span> also for deleting the connection.</p>
+
+          <p style="padding-bottom: 1em;">After creating the farm just select the number of ants to go through the farm.</p>
+          <p style="padding-bottom: 1em;">Finally, press <span style="color: #14A76C; font-weight: 500;">Run</span> to see your ants in action!</p>
+          <p>Enjoy! 🙌 </p>
+          <img src="./favicon.ico">
+      </div>
     </div>
 
+    <div class="main disabled">
 
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-      <div class="container">
-        <div class="navbar-brand">
-          <a href="" id="logo" class="navbar-item">
-          </a>
-          <a class="navbar-item" href="">
-            <strong>AntFarm</strong>
-          </a>
-          <span class="navbar-burger burger" data-target="navbarMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
+      <div id="show">
+      </div>
   
-          <div id="navbarMenu" class="navbar-menu">
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="container">
+          <div class="navbar-brand">
+            <a href="" id="logo" class="navbar-item">
+            </a>
+            <a class="navbar-item" href="">
+              <strong>AntFarm</strong>
+            </a>
+            <span class="navbar-burger burger" data-target="navbarMenu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+    
+            <div id="navbarMenu" class="navbar-menu">
+    
+              <div class="navbar-start">
+                <span class="navbar-item">
+                  <a class="button is-rounded is-primary is-outlined" id="add-room">
+                    <strong>+</strong>
+                  </a>
+                </span>
+    
+                <span class="navbar-item">
+                  <a class="button is-rounded is-danger is-outlined" id="delete">
+                    <strong>-</strong>
+                  </a>
+                </span>
+                
+                <div class="navbar-item">
+                  <span class="tag is-light is-medium">
+                    <p>
+                      Number of Ants: <strong><span id="ants">1</span></strong>
+                    </p>
+                  </span>
+                </div>
+    
+                <div class="navbar-item">
+                  <input id="rangePicker" type="range" step="1" min="1" max="100" value="1">
+                </div>
   
-            <div class="navbar-start">
-              <span class="navbar-item">
-                <a class="button is-rounded is-primary is-outlined" id="add-room">
-                  <strong>+</strong>
-                </a>
-              </span>
+              </div>
+          
+              <div class="navbar-end">
+                <div class="navbar-item">
+                  <img id="info" src="http://www.pzdwieruszow.pl/wp-content/uploads/2015/12/info-512.png" alt="">
+                </div>
   
-              <span class="navbar-item">
-                <a class="button is-rounded is-danger is-outlined" id="delete">
-                  <strong>-</strong>
-                </a>
-              </span>
-              
-              <div class="navbar-item">
-                <span class="tag is-light is-medium">
-                  <p>
-                    Number of Ants: <strong><span id="ants">1</span></strong>
-                  </p>
+                <span class="navbar-item">
+                  <a class="button is-primary" id="start">
+                    <strong>Run</strong>
+                  </a>
                 </span>
               </div>
-  
-              <div class="navbar-item">
-                <input id="rangePicker" type="range" step="1" min="1" max="100" value="1">
-              </div>
             </div>
-        
-            <div class="navbar-end">
-              <span class="navbar-item">
-                <a class="button is-primary" id="start">
-                  <strong>Run</strong>
-                </a>
-              </span>
-            </div>
+            
           </div>
-          
         </div>
-      </div>
-    </nav>
-    
-    <canvas id="c"></canvas>
+      </nav>
+      
+      <canvas id="c"></canvas>
+    </div>
   </body>
 </html>
