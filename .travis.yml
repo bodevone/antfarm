@@ -1,17 +1,20 @@
 language: generic
 sudo: required
 services:
-    - docker
+- docker
 env:
-    - DOCKER_COMPOSE_VERSION=1.25.4 SERVER_IP_ADDRESS=165.22.28.236
+- DOCKER_COMPOSE_VERSION=1.25.4 SERVER_IP_ADDRESS=165.22.28.236
 before_install:
-    - sudo rm /usr/local/bin/docker-compose
-    - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-    - chmod +x docker-compose
-    - sudo mv docker-compose /usr/local/bin
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
 script:
-    - docker-compose build --no-cache
-    - docker-compose up -d
-after_success:
-    - bash deploy.sh
-    
+- docker-compose build --no-cache
+- docker-compose up -d
+deploy:
+    provider: heroku
+    api_key:
+        secure: keIsKhqu01aDxcoXagO+QUb4TMk2L8S42nzpGwo5Iv5EfUGsieUE0DEm5oPRpKQr6XpvcO5ApgDuR1Xbb1pMRAt6CNtB7sDOST6mYpt/LLQbk+4MXdfrhudX2R4eFblXg428SUx0RS1nUmhoGshrXUJPC+EapH+ccAmF2yCMqaLc3sPjG/IkGws+L6WG9QtmdU3bwGQ9X2SMLT1frDmQig08q2SJjwGHxWt+oHGds064qmjXIIJIQHdjkMOfXkOGZGIHvkBPzOdnsKZz8KkiJH21cJelEqiQmf0iFTlKxikUejzxsa9hp0rjT3XIgtTvYq+JQbDW0O90St2eRvXKd8XzOrpE3X7V3P5uDWWxrxFCkXlx0z6d/V03h/Uv5mCEfxN3R06MeVioIbruT3/TZKR99ttvoT39oVwdWE+dyMeQkNVpX0iU8eVsunv6dC4adQS+hn2i35SceHa0fp9wG+F1E0uy+YEIMOMhRfGIqeLfEdR+TWqMJQXZ5jfvPc/DyPn6kiuz27ghlr6HtZVWtQ0djb0pZBez+pwUokoa0CyLY925zin2KLObLC1zRnXBtxtu+1FiEoSKmezz7yKUuveN7Fi1YjhkKkktXWjEodHLZowr7QeLoFNtnwT/jbZyviXcAvBP7VfnjXcx9khPgK1BSe7Pm6l1xS+ZzI4z7wA=
+    app: antfarmnow
