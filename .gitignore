@@ -1,5 +1,7 @@
 .DS_Store
 deploy_key
+deploy_rsa
+deploy_rsa.pub
 
 front/node_modules
 front/npm-debug.log
