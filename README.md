@@ -8,6 +8,8 @@ Visualise the movement of ants in an ant farm. This app is extension of [lem-in]
 
 ### [Visit the site](https://www.antfarm.ml/)
 
+![](docs/example.png "example")
+
 ## Technologies
 ### Overall
 * Docker
