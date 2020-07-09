@@ -2,10 +2,10 @@
 set -x
 
 eval "$(ssh-agent -s)"
-chmod 600 ./deploy_key
+chmod 600 ./deploy_rsa
 echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-ssh-add ./deploy_key
-ssh -i ./deploy_key root@$SERVER_IP_ADDRESS <<EOF
+ssh-add ./deploy_rsa
+ssh -i ./deploy_rsa root@$SERVER_IP_ADDRESS <<EOF
     cd antfarm
     git pull
     docker-compose down
