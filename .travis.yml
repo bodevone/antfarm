@@ -3,7 +3,7 @@ sudo: required
 services:
     - docker
 env:
-    - DOCKER_COMPOSE_VERSION=1.25.4 SERVER_IP_ADDRESS=165.22.28.236
+    - DOCKER_COMPOSE_VERSION=1.25.4 SERVER_IP_ADDRESS=108.61.211.39
 before_install:
     - sudo rm /usr/local/bin/docker-compose
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -12,6 +12,6 @@ before_install:
 script:
     - docker-compose build --no-cache
     - docker-compose up -d
-# after_success:
-#     - bash deploy.sh
+after_success:
+    - bash deploy.sh
     

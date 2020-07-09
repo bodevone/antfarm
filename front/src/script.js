@@ -18,8 +18,7 @@ const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
 const ANIMATION_TEXT = 'Animation in progress'
-// const URL = 'https://www.antfarm.ml/api'
-const URL = 'http://localhost:8080'
+const URL = 'https://www.antfarm.ml/api'
 const END = 100
 
 const EXAMPLES = [
