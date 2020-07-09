@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // DataInput from client
@@ -38,8 +39,9 @@ func ParseData(reqBody []byte) {
 
 	// Connections
 	for _, c := range data.Connections {
-		room1 := string(c[0])
-		room2 := string(c[1])
+		split := strings.Split(c, "-")
+		room1 := string(split[0])
+		room2 := string(split[1])
 
 		if InRooms(room1) && InRooms(room2) {
 			graph.links = append(graph.links, Link{room1, room2})

@@ -18,7 +18,8 @@ const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
 const ANIMATION_TEXT = 'Animation in progress'
-const URL = 'https://www.antfarm.ml/api'
+// const URL = 'https://www.antfarm.ml/api'
+const URL = 'http://localhost:8080'
 const END = 100
 
 const EXAMPLES = [
@@ -27,8 +28,8 @@ const EXAMPLES = [
     "connections": [[0, 2], [2, 1], [0, 3], [3, 4], [4, 1]]
   },
   {
-    "rooms": [[7/20, 1/2], [1/2, 1/2], [13/20, 1/2], [7/20, 7/20], [7/20, 1/2], [1/2, 4/5], [13/20, 4/5], [4/5, 4/5], [1/5, 1/5], [17/40, 1/5], [13/20, 1/5]],
-    "connections": [[0, 2], [2, 3], [3, 4], [4, 1], [0, 5], [5, 6], [2, 7], [7, 8], [8, 9], [9, 1], [0, 10], [10, 11], [11, 12], [12, 4]]
+    "rooms": [[7/20, 1/2], [1/2, 1/2], [13/20, 1/2], [7/20, 7/20], [1/2, 7/20], [1/2, 4/5], [13/20, 4/5], [4/5, 4/5], [1/5, 1/5], [17/40, 1/5], [13/20, 1/5]],
+    "connections": [[0, 2], [2, 3], [3, 4], [4, 1], [0, 5], [5, 6], [6, 3], [2, 7], [7, 8], [8, 9], [9, 1], [0, 10], [10, 11], [11, 12], [12, 4]]
   }
 ]
 
@@ -54,9 +55,9 @@ function order(num1, num2) {
   let str1 = num1.toString()
   let str2 = num2.toString()
   if (num1 < num2) {
-    return str1 + str2
+    return str1 + '-' + str2
   }
-  return str2 + str1
+  return str2 + '-' + str1
 }
 
 class AntFarm {
@@ -97,9 +98,9 @@ class AntFarm {
       }
       let length = Math.max(length1, length2)
       for (let i=0; i<length; i++) {
-        p.lines1[i] && p.lines1[i].set({ 'x1': p.left + RADIUS, 'y1': p.top + RADIUS })
+        p.lines1[i] && p.lines1[i].set({ 'x1': p.left + RADIUS/scale, 'y1': p.top + RADIUS/scale })
         p.lines1[i] && p.lines1[i].setCoords()
-        p.lines2[i] && p.lines2[i].set({ 'x2': p.left + RADIUS, 'y2': p.top + RADIUS })
+        p.lines2[i] && p.lines2[i].set({ 'x2': p.left + RADIUS/scale, 'y2': p.top + RADIUS/scale })
         p.lines2[i] && p.lines2[i].setCoords()
       }
       canvas.renderAll()
@@ -107,10 +108,18 @@ class AntFarm {
 
 
     document.getElementById('clear').addEventListener('click', event => {
+      if (this.animation) {
+        this.show(ANIMATION_TEXT)
+        return
+      }
       this.newCanvas()
     })
 
-    document.getElementById('example').addEventListener('click', event => {      
+    document.getElementById('example').addEventListener('click', event => {    
+      if (this.animation) {
+        this.show(ANIMATION_TEXT)
+        return
+      }  
       scale = 2
       this.newCanvas()
       const example = EXAMPLES[this.exampleCounter]
@@ -130,8 +139,12 @@ class AntFarm {
     })
 
     document.getElementById('rangePicker').addEventListener('input', event => {
+      if (this.animation) {
+        this.show(ANIMATION_TEXT)
+        return
+      }
       const value = event.target.value
-      this.data.ants = parseInt(value)
+      data.ants = parseInt(value)
 
       const ants = document.getElementById('ants')
       ants.textContent = value
@@ -150,7 +163,6 @@ class AntFarm {
         this.show(ANIMATION_TEXT)
         return
       }
-
       const act = canvas.getActiveObject()
       if (act) {
         if (act.type == 'line') {
@@ -192,11 +204,10 @@ class AntFarm {
         data.rooms.push(parseInt(id))
       }
 
-      this.data.connections = []
+      data.connections = []
       for (let connection in connections) {
         data.connections.push(connection)
       }
-
       fetch(URL, {
         method: 'POST',
         headers: {
@@ -326,8 +337,8 @@ class AntFarm {
   
       this.lockCanvas()
   
-      let left = rooms[0].left + RADIUS - RADIUSANT
-      let top = rooms[0].top + RADIUS - RADIUSANT
+      let left = rooms[0].left + RADIUS / scale - RADIUSANT / scale
+      let top = rooms[0].top + RADIUS/scale - RADIUSANT / scale
   
       for (let i=0; i<data.ants; i++) {
         let ant = new fabric.Circle({
@@ -342,11 +353,11 @@ class AntFarm {
         antPrevRoom[i+1] = rooms[0]
         canvas.add(ant)
       }
-  
+
       for (let i=0; i<=output.Steps.length; i++) {
         this.animated.push(false)
       }
-      
+
       setTimeout(this.animate(0), 1000)
     }
   }
@@ -364,20 +375,21 @@ class AntFarm {
   }
   
   animateAnt(ant, room, i, last) {
-    let fromX = this.antPrevRoom[ant].left + RADIUS - RADIUSANT
-    let fromY = this.antPrevRoom[ant].top + RADIUS - RADIUSANT
+    let fromX = antPrevRoom[ant].left + RADIUS/scale - RADIUSANT/scale
+    let fromY = antPrevRoom[ant].top + RADIUS/scale - RADIUSANT/scale
   
-    let toX = rooms[room].left + RADIUS - RADIUSANT
-    let toY = rooms[room].top + RADIUS - RADIUSANT
+    let toX = rooms[room].left + RADIUS/scale - RADIUSANT/scale
+    let toY = rooms[room].top + RADIUS/scale - RADIUSANT/scale
   
     let dx = (toX - fromX) / END
     let dy = (toY - fromY) / END
+
   
     fabric.util.animate({
       startValue: 0,
       endValue: END,
       duration: 1000,
-      onChange: function(value) {
+      onChange: value => {
         let x = dx * value
         let y = dy * value
         ants[ant].set({left: fromX + x, top: fromY + y})
@@ -386,7 +398,7 @@ class AntFarm {
           canvas.renderAll()
         }
       },
-      onComplete: function() {
+      onComplete: () => {
         if (output.Steps[i] && !this.animated[i]) {
           for (const [ant, room] of Object.entries(output.Steps[i])) {
             antPrevRoom[ant] = rooms[room]
@@ -422,7 +434,7 @@ class AntFarm {
     div.style.zIndex = 100
     div.style.paddingTop = '5em'
   
-    setTimeout(function() {
+    setTimeout(() => {
       let op = 1;  // initial opacity
       let timer = setInterval(() => {
           if (op <= 0.1){

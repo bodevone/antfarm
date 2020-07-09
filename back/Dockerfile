@@ -4,3 +4,4 @@ RUN go get -u github.com/gorilla/handlers
 WORKDIR /go/src/ant-farm
 COPY . .
 RUN go build -o main .
+CMD ["./main"]
