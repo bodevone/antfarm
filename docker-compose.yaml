@@ -14,10 +14,10 @@ services:
     back:
         build: ./back
         command: /go/src/ant-farm/main
-        ports:
-            - '8080:8081'
+        expose:
+            - 8081
     front:
         build: ./front
         command: npm run build
-        ports:
-            - '3500:3000'
+        expose:
+            - 3000
