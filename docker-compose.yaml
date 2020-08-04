@@ -21,3 +21,6 @@ services:
         command: npm run build
         expose:
             - 3000
+volumes:
+    - certs
+    - certs-data
