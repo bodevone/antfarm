@@ -22,5 +22,5 @@ services:
         expose:
             - 3000
 volumes:
-    - certs
-    - certs-data
+    certs:
+    certs-data:
