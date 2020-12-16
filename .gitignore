@@ -1,8 +1,7 @@
 .DS_Store
-deploy_key
-deploy_rsa
-deploy_rsa.pub
+.env
 
-front/node_modules
-front/npm-debug.log
-front/dist
+node_modules
+npm-debug.log
+package-lock.json
+dist
