@@ -13,6 +13,7 @@ const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
 const ANIMATION_TEXT = 'Animation in progress'
+const SERVER_RESPONDING_TEXT = 'Server is responding'
 const URL = 'https://antfarm.onrender.com/'
 const END = 100
 
@@ -60,6 +61,7 @@ class AntFarm {
     this.exampleCounter = 0
     this.animation = false
     this.pressed = false
+    this.server_reponding = false
     this.animated = []
 
     this.addEventListeners()
@@ -106,6 +108,10 @@ class AntFarm {
         this.show(ANIMATION_TEXT)
         return
       }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
+        return
+      }
       this.newCanvas()
     })
 
@@ -113,7 +119,11 @@ class AntFarm {
       if (this.animation) {
         this.show(ANIMATION_TEXT)
         return
-      }  
+      }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
+        return
+      }
       scale = 2
       this.newCanvas()
       const example = EXAMPLES[this.exampleCounter]
@@ -137,6 +147,10 @@ class AntFarm {
         this.show(ANIMATION_TEXT)
         return
       }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
+        return
+      }
       const value = event.target.value
       data.ants = parseInt(value)
 
@@ -149,12 +163,20 @@ class AntFarm {
         this.show(ANIMATION_TEXT)
         return
       }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
+        return
+      }
       this.newRoom(LEFT, TOP, COLOR)
     })
 
     document.getElementById('delete').addEventListener('click', () => {
       if (this.animation) {
         this.show(ANIMATION_TEXT)
+        return
+      }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
         return
       }
       const act = canvas.getActiveObject()
@@ -193,6 +215,10 @@ class AntFarm {
         this.show(ANIMATION_TEXT)
         return
       }
+      if (this.server_reponding) {
+        this.show(SERVER_RESPONDING_TEXT)
+        return
+      }
       data.rooms = []
       for (let id in rooms) {
         data.rooms.push(parseInt(id))
@@ -202,6 +228,7 @@ class AntFarm {
       for (let connection in connections) {
         data.connections.push(connection)
       }
+      this.server_reponding = true
       fetch(URL, {
         method: 'POST',
         headers: {
@@ -217,6 +244,7 @@ class AntFarm {
       .catch((error) => {
         this.show('Error from server')
       })
+      this.server_responding = false
     })
 
   }
