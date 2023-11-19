@@ -18,17 +18,11 @@
           <div id="close" class="info-close">X</div>
           <p style="font-size: 30px; font-weight: 500;">Ant Farm</p>
           
-          <p style="padding-bottom: 1em;">Visualise the movement of your ants on an ant farm.</p>
+          <p style="padding-bottom: 1em;">Visualise the movement of the ants on an ant farm.</p>
           
-          <p>First of all, you need to create an ant farm by dragging the rooms around.</p>
-          <p>You can either add or delete the room.</p>
-          <p><span style="color: #14A76C; font-weight: 500;">+</span> for adding the room and <span style="color: hsl(348, 100%, 61%); font-weight: 500;">-</span> for deleting the room.</p>
-          <p style="font-style: italic; padding-bottom: 1em;">NOTE: <span style="color: #FF652F; font-weight: 500;">Orange rooms</span> are the main rooms between which movement will be done, therefore they cannot be deleted.</p>
-          <p>Then select two rooms to create connection between them.</p>
-          <p style="padding-bottom: 1em;"><span style="color: hsl(348, 100%, 61%); font-weight: 500;">-</span> also for deleting the connection.</p>
-
-          <p style="padding-bottom: 1em;">After creating the farm just select the number of ants to go through the farm.</p>
-          <p style="padding-bottom: 1em;">Finally, press <span style="color: #14A76C; font-weight: 500;">Run</span> to see your ants in action!</p>
+          <p>- generate an example antfarm</p>
+          <p>- select a number of ants</p>
+          <p>- press <span style="color: #14A76C; font-weight: 500;">Run</span> to see your ants in action!</p>
           <p>Enjoy! 🙌 </p>
           <img src="./assets/favicon.ico">
           
@@ -58,18 +52,6 @@
             <div id="navbarMenu" class="navbar-menu">
     
               <div class="navbar-start">
-                <span class="navbar-item">
-                  <a class="button is-rounded is-primary is-outlined" id="add-room">
-                    <strong>+</strong>
-                  </a>
-                </span>
-    
-                <span class="navbar-item">
-                  <a class="button is-rounded is-danger is-outlined" id="delete">
-                    <strong>-</strong>
-                  </a>
-                </span>
-                
                 <div class="navbar-item">
                   <span class="tag is-light is-medium">
                     <p>
@@ -82,17 +64,9 @@
                   <input id="rangePicker" type="range" step="1" min="1" max="100" value="1">
                 </div>
 
-
                 <span class="navbar-item">
                   <a class="button is-warning" id="example">
                     Generate Example
-                  </a>
-                </span>
-
-
-                <span class="navbar-item">
-                  <a class="button is-info is-outlined" id="clear">
-                    <strong>Clear</strong>
                   </a>
                 </span>
   
@@ -118,8 +92,18 @@
       <canvas id="c"></canvas>
     </div>
 
-    <script src="script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+
+    <script src="js/pathsFinder/dijsktra.js"></script>
+    <script src="js/pathsFinder/findPaths.js"></script>
+    <script src="js/pathsFinder/graph.js"></script>
+    <script src="js/pathsFinder/paths.js"></script>
+    <script src="js/pathsFinder/priorityQueue.js"></script>
+    <script src="js/pathsFinder/suurballe.js"></script>
+
+    <script src="js/linkedList.js"></script>
+    <script src="js/graphGenerator.js"></script>
+    <script src="js/main.js"></script>
 
   </body>
 </html>
