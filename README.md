@@ -2,21 +2,14 @@
 
 Visualise the movement of ants in an ant farm.
 
-### [Visit the site](https://antfarm.vercel.app/)
+This is minimum cost maximum flow problem
 
-![](docs/example.png "example")
+## Overview
+- Generate random graph which represents an ant farm
+- Select desired number of ants to walk across this ant farm
+- Observe how ants walk through fastest paths from start node to end node 
 
-## Technologies
-### Frontend
-* Javascript
-* Webpack
-* Fabric JS
-
-### Backend
-* Golang
-
-## Project description
-
-* You make an ant farm with tunnels and rooms.
-* You select desired number of ants to go from start to end rooms.
-* You observe how algorithm finds the quickest way for ants to move in an ant farm
+## Implementation
+- Algorithm for generating random edges: Steger-Wormald
+- Algorithm for generating random positions: Fruchterman-Reingold
+- Algorithm for finding fastest paths: Suurballe + Dijkstra

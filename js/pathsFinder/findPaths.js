@@ -47,7 +47,7 @@ function findBestPaths(graph) {
 }
 
 function formatPaths(paths, numAnts) {
-  let result = {"numSteps": paths.numSteps}
+  let result = {}
   paths.findAssignment(numAnts)
   let lastAnt = 0
   let antNum = 1

@@ -17,10 +17,10 @@ class AntFarm {
 
     this.animation = false
     this.pressed = false
-    this.animated = []
 
     this.rooms = {}
     this.connections = new Set()
+    this.animated = []
     this.ants = {}
     this.antPrevRoom = {}
     this.numAnts = 1
@@ -186,10 +186,7 @@ class AntFarm {
   }
   
   animate(pathsData, i) {
-    let len = 0
-    for (let o in pathsData.steps[i]) {
-      len++
-    }
+    let len = pathsData.steps[i].size
     let curr = 0
     for (const [ant, room] of pathsData.steps[i].entries()) {
       curr++
@@ -216,7 +213,6 @@ class AntFarm {
         let y = dy * value
         this.ants[ant].set({left: fromX + x, top: fromY + y})
         if (last) {
-          this.ants[ant].setCoords()
           this.canvas.renderAll()
         }
       },
@@ -232,6 +228,7 @@ class AntFarm {
             this.completed()
           }
         }
+        
       }
     })
   }
@@ -278,13 +275,11 @@ class AntFarm {
     for (let i=0; i<this.numAnts; i++) {
       this.canvas.remove(this.ants[i+1])
     }
-  
+    this.animated = []
     this.ants = {}
     this.antPrevRoom = {}
-    this.animated = []
   }
 }
-
 
 class ToggleInfo {
   constructor() {
@@ -317,7 +312,6 @@ class ToggleInfo {
     this.infoClosed = !this.infoClosed
   }
 }
-
 
 function burger() {
   let burger = document.querySelector('.burger')

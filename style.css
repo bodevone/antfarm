@@ -12,25 +12,19 @@ body {
     opacity: 0.4;
 }
 
-#logo {
-    background-image: url("../assets/logo.png");
-    background-size: 100% 100%;
-    width: 56px;
-}
-
 #c {
     margin: 0;
     overflow: hidden   
 }
 
 input[type="range"] {
-    -webkit-appearance: none;
+    --webkit-appearance: none;
     background-color: #bdc3c7;
     height: 5px;
     border-radius: 5px;
 }
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+    --webkit-appearance: none;
     background-color: #e74c3c;
     width: 30px;
     height: 30px;
@@ -50,7 +44,6 @@ input[type="range"]::-webkit-slider-thumb:active {
 #info:hover {
     cursor: pointer;
 }
-
 
 .info-wrapper {
     position: absolute;
