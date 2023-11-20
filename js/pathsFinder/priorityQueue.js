@@ -89,7 +89,7 @@ class PriorityQueue {
       return null
     }
     const top = this.heap[0].value
-    if (this.size() == 1) {
+    if (this.size() === 1) {
       this.heap.pop()
       return top
     }

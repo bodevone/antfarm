@@ -190,7 +190,7 @@ class AntFarm {
     let curr = 0
     for (const [ant, room] of pathsData.steps[i].entries()) {
       curr++
-      this.animateAnt(pathsData, ant, room, i, curr==len)
+      this.animateAnt(pathsData, ant, room, i, curr===len)
     }
   }
   

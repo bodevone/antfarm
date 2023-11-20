@@ -1,16 +1,16 @@
 function checkVertice(graph, pq, v) {
   let room = graph.rooms.get(v)
-  if (room.split && room.costIn > room.costOut+room.priceOut-room.priceIn && v != graph.start) {
+  if (room.split && room.costIn > room.costOut+room.priceOut-room.priceIn && v !== graph.start) {
     room.edgeIn = room.edgeOut
     room.costIn = room.costOut + room.priceOut - room.priceIn
-    if (room.costIn != room.costOut) {
+    if (room.costIn !== room.costOut) {
       pq.push(room.costIn, v)
     }
   }  
-  if (!room.split && room.costOut > room.costIn+room.priceIn-room.priceOut && v != graph.end) {
+  if (!room.split && room.costOut > room.costIn+room.priceIn-room.priceOut && v !== graph.end) {
     room.edgeOut = room.edgeIn
     room.costOut = room.costIn + room.priceIn - room.priceOut
-    if (room.costIn != room.costOut) {
+    if (room.costIn !== room.costOut) {
       pq.push(room.costOut, v)
     }
   }
@@ -19,15 +19,15 @@ function checkVertice(graph, pq, v) {
 function checkEdge(graph, pq, v1, v2) {
   let room1 = graph.rooms.get(v1)
   let room2 = graph.rooms.get(v2)
-  if (v1 == graph.end || v2 == graph.start || room2.parent == v1) {
+  if (v1 === graph.end || v2 === graph.start || room2.parent === v1) {
     return
   }
-  if (room1.parent == v2 && room1.costIn < MAX_N_ROOMS && (1+room2.costOut > room1.costIn+room1.priceIn-room2.priceOut)) {
+  if (room1.parent === v2 && room1.costIn < MAX_N_ROOMS && (1+room2.costOut > room1.costIn+room1.priceIn-room2.priceOut)) {
     room2.edgeOut = v1
     room2.costOut = room1.costIn - 1 + room1.priceIn - room2.priceOut
     pq.push(room2.costOut, v2)
     checkVertice(graph, pq, v2)
-  } else if (room1.parent != v2 && room1.costOut < MAX_N_ROOMS && room2.costIn-1 > room1.costOut+room1.priceOut-room2.priceIn) {
+  } else if (room1.parent !== v2 && room1.costOut < MAX_N_ROOMS && room2.costIn-1 > room1.costOut+room1.priceOut-room2.priceIn) {
     room2.edgeIn = v1
     room2.costIn = room1.costOut + 1 + room1.priceOut - room2.priceIn
     pq.push(room2.costIn, v2)
@@ -53,6 +53,6 @@ function dijsktra(graph) {
     }
   }
   changePrices(graph)
-  return graph.rooms.get(graph.end).edgeIn != "L"
+  return graph.rooms.get(graph.end).edgeIn !== "L"
 }
  

@@ -1,5 +1,5 @@
 function setNodeSplit(graph, v) {
-  if (v != graph.start && v != graph.end) {
+  if (v !== graph.start && v !== graph.end) {
     graph.rooms.get(v).split = true
   }
 }
@@ -14,8 +14,8 @@ function setGraphPath(graph) {
   let v1 = graph.end
   let v2 = graph.rooms.get(v1).edgeIn
   graph.exits.pushBack(v2)
-  while (v1 != graph.start) {
-    if (graph.rooms.get(v2).parent == v1) {
+  while (v1 !== graph.start) {
+    if (graph.rooms.get(v2).parent === v1) {
       if (unsplit) setNodeUnsplit(graph, v1)
       unsplit = true
       v1 = v2

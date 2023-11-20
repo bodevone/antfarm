@@ -17,16 +17,16 @@ class LinkedList {
     return this.length === 0
   }
 
+  len() {
+    return this.length
+  }
+
   front() {
     return this.head
   }
 
   back() {
     return this.tail
-  }
-
-  size() {
-    return this.length
   }
 
   popFront() {
@@ -81,9 +81,5 @@ class LinkedList {
     this.tail = newElement
     this.tail.prev = temp
     temp.next = this.tail
-  }
-
-  len() {
-    return this.length
   }
 }

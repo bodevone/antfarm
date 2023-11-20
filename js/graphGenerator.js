@@ -5,7 +5,7 @@ function generateNumNodes(d) {
   const min = Math.ceil(minNumNodes)
   const max = Math.floor(maxNumNodes)
   var n = 1
-  while (n*d % 2 != 0) {
+  while (n*d % 2 !== 0) {
     n = Math.floor(Math.random() * (max - min) + min)
   }
   return n
@@ -56,12 +56,12 @@ function generateEdges(n, d) {
   }
 
   function _isSuitable(edges, potentialEdges) {
-    if (potentialEdges.size == 0) {
+    if (potentialEdges.size === 0) {
       return true
     }
     for (let s1 of potentialEdges.keys()) {
       for (let s2 of potentialEdges.keys()) {
-        if (s1 == s2) {
+        if (s1 === s2) {
           break
         }
         if (s1 > s2) {
@@ -91,7 +91,7 @@ function generateEdges(n, d) {
           [s1, s2] = [s2, s1]
         }
         let edge = [s1, s2]
-        if (s1 != s2 && !edges.has(edge)) {
+        if (s1 !== s2 && !edges.has(edge)) {
           edges.add(edge)
         } else {
           potentialEdges.set(s1, (potentialEdges[s1] || 0) + 1)
@@ -113,7 +113,7 @@ function generateEdges(n, d) {
     return edges
   }
   let edges = new Set()
-  while (edges === null || edges.size == 0) {
+  while (edges == null || edges.size === 0) {
     edges = _createEdges()
   }
   return Array.from(edges)
