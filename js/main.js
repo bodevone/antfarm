@@ -38,8 +38,7 @@ class AntFarm {
   }
 
   createCanvas() {
-    this.canvas = new fabric.Canvas('c')
-    this.canvas.selection = false
+    this.canvas = new fabric.Canvas('c', {'selection': false})
     this.canvas.setDimensions({width: window.innerWidth, height: window.innerHeight})
   }
 
@@ -130,7 +129,7 @@ class AntFarm {
       top: top - RADIUS,
       id: nodeId,
       hasControls: false,
-      event: false,
+      evented: false,
     })
   
     this.canvas.add(c)
