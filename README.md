@@ -11,5 +11,6 @@ This is minimum cost maximum flow problem
 
 ## Implementation
 - Algorithm for generating random edges: Steger-Wormald
+- Algorithm for setting start and end nodes: bfs
 - Algorithm for generating random positions: Fruchterman-Reingold
 - Algorithm for finding fastest paths: Suurballe + Dijkstra

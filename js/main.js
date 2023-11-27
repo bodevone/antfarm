@@ -7,7 +7,6 @@ const COLORMAIN = '#FF652F'
 const COLOR = '#FFE400'
 const COLORANT = '#14A76C'
 const CONNECTION = '#747474'
-const ANIMATION_TEXT = 'Animation in progress'
 const END = 100
 
 
@@ -15,18 +14,20 @@ class AntFarm {
   constructor() {
     this.canvas
 
-    this.animation = false
-    this.pressed = false
-
-    this.rooms = {}
+    this.rooms = new Map()
     this.connections = new Set()
-    this.animated = []
-    this.ants = {}
-    this.antPrevRoom = {}
-    this.numAnts = 1
-    this.numNodes
     this.start
     this.end
+    this.numAnts = 1
+    this.numNodes
+
+    this.ants = new Map()
+    this.antPrevRoom = new Map()
+
+    this.navbar = document.querySelector('.navbar')
+    this.rangePicker = document.getElementById('rangePicker')
+    this.graphGeneratorButton = document.getElementById('graphGenerator')
+    this.startButton = document.getElementById('start')
 
     this.init()
   }
@@ -34,7 +35,7 @@ class AntFarm {
   init() {
     this.createCanvas()
     this.addEventListeners()
-    this.createExample()
+    this.generateNewGraph()
   }
 
   createCanvas() {
@@ -43,20 +44,11 @@ class AntFarm {
   }
 
   addEventListeners() {
-    document.getElementById('example').addEventListener('click', event => {
-      if (this.animation) {
-        this.show(ANIMATION_TEXT)
-        return
-      }
-      this.createExample()
+    this.graphGeneratorButton.addEventListener('click', event => {
+      this.generateNewGraph()
     })
 
-    document.getElementById('rangePicker').addEventListener('input', event => {
-      if (this.animation) {
-        this.show(ANIMATION_TEXT)
-        return
-      }
-
+    this.rangePicker.addEventListener('input', event => {
       const value = event.target.value
       this.numAnts = parseInt(value)
 
@@ -64,14 +56,11 @@ class AntFarm {
       ants.textContent = value
     })
 
-    document.getElementById('start').addEventListener('click', () => {
-      if (this.animation) {
-        this.show(ANIMATION_TEXT)
-        return
-      }
+    this.startButton.addEventListener('click', () => {
       let data = {}
+
       data.rooms = []
-      for (let roomId in this.rooms) {
+      for (const roomId of this.rooms.keys()) {
         data.rooms.push(roomId)
       }
   
@@ -79,50 +68,55 @@ class AntFarm {
       for (const connection of this.connections) {
         data.connections.push(connection)
       }
+
       data.numAnts = this.numAnts
-      data.start = this.start.toString()
-      data.end = this.end.toString()
+      data.start = this.start
+      data.end = this.end
+
       const pathsData = findPaths(data)
-  
-      this.animateSetup(pathsData)
+
+      this.animate(pathsData)
     })
   }
 
-  createExample() {
-    const graphData = generateGraph()
-
-    this.newCanvas()
-    const positions = graphData.positions
-    const edges = graphData.edges
-    this.numNodes = graphData.numNodes
-    this.start = graphData.start
-    this.end = graphData.end
-
-    for (const [node, pos] of positions) {
-      let x = WIDTH * pos[0]
-      let y = HEIGHT * pos[1]
-      this.newRoom(node, x, y)
-    }
-    for (const [node1, node2] of edges) {
-      const room1 = this.rooms[node1]
-      const room2 = this.rooms[node2]
-      this.newLine(room1, room2)
-    }
-  }
-
-  newCanvas() {
-    this.rooms = {}
+  resetCanvas() {
+    this.rooms = new Map()
     this.connections = new Set()
     this.canvas.clear()
-    this.completed()
   }
 
-  newRoom(nodeId, left, top) {
+  generateNewGraph() {
+    this.resetCanvas()
+
+    const graphData = generateGraph()
+
+    this.numNodes = graphData.numNodes
+    this.start = graphData.start.toString()
+    this.end = graphData.end.toString()
+
+    const positions = graphData.positions
+    const edges = graphData.edges
+
+    for (const [node, pos] of positions) {
+      const x = WIDTH * pos[0]
+      const y = HEIGHT * pos[1]
+      this.createRoom(node.toString(), x, y)
+    }
+
+    for (const [node1, node2] of edges) {
+      const room1 = this.rooms.get(node1.toString())
+      const room2 = this.rooms.get(node2.toString())
+      this.createConnection(room1, room2)
+    }
+  }
+
+  createRoom(nodeId, left, top) {
     let color = COLOR
     if (nodeId == this.start || nodeId == this.end) {
       color = COLORMAIN
     }
-    let c = new fabric.Circle({
+
+    const c = new fabric.Circle({
       radius: RADIUS,
       fill: color,
       left: left - RADIUS,
@@ -134,10 +128,10 @@ class AntFarm {
   
     this.canvas.add(c)
     this.canvas.bringToFront(c)
-    this.rooms[nodeId] = c
+    this.rooms.set(nodeId, c)
   }
 
-  newLine(c1, c2) {
+  createConnection(c1, c2) {
     const key1 = c1.id.toString() + "-" + c2.id.toString()
     const key2 = c2.id.toString() + "-" + c1.id.toString()
     if (this.connections.has(key1) || this.connections.has(key2)) {
@@ -157,14 +151,28 @@ class AntFarm {
     this.connections.add(key1)
   }
 
-  animateSetup(pathsData) {
-    this.animation = true
+  enableNavbar() {
+    this.navbar.classList.remove('disabled')
+    this.rangePicker.disabled = false
+    this.graphGeneratorButton.disabled = false
+    this.startButton.disabled = false
+  }
 
-    let left = this.rooms[this.start].left + RADIUS - RADIUSANT
-    let top = this.rooms[this.start].top + RADIUS - RADIUSANT
+  disableNavbar() {
+    this.navbar.classList.add('disabled')
+    this.rangePicker.disabled = true
+    this.graphGeneratorButton.disabled = true
+    this.startButton.disabled = true
+  }
 
-    for (let i=1; i<=this.numAnts; i++) {
-      let ant = new fabric.Circle({
+  animate(pathsData) {
+    this.disableNavbar()
+
+    const left = this.rooms.get(this.start).left + RADIUS - RADIUSANT
+    const top = this.rooms.get(this.start).top + RADIUS - RADIUSANT
+
+    for (let antInd=1; antInd<=this.numAnts; antInd++) {
+      const ant = new fabric.Circle({
         radius: RADIUSANT,
         fill: COLORANT,
         left: left,
@@ -172,111 +180,76 @@ class AntFarm {
         hasControls: false,
         evented: false
       })
-      this.ants[i] = ant
-      this.antPrevRoom[i] = this.rooms[this.start]
+      this.ants.set(antInd, ant)
+      this.antPrevRoom.set(antInd, this.rooms.get(this.start))
       this.canvas.add(ant)
     }
 
-    for (let i=0; i<=pathsData.steps.length; i++) {
-      this.animated.push(false)
-    }
-
-    setTimeout(this.animate(pathsData, 0), 1000)
+    setTimeout(this.animateStep(pathsData, 0), 1000)
   }
   
-  animate(pathsData, i) {
-    let len = pathsData.steps[i].size
-    let curr = 0
-    for (const [ant, room] of pathsData.steps[i].entries()) {
-      curr++
-      this.animateAnt(pathsData, ant, room, i, curr===len)
+  animateStep(pathsData, stepInd) {
+    let currAnt = 1
+    for (const [ant, room] of pathsData.steps[stepInd].entries()) {
+      const isFirstAnt = currAnt === 1
+      const isLastAnt = currAnt === pathsData.steps[stepInd].size
+      this.animateAnt(pathsData, ant, room, stepInd, isFirstAnt, isLastAnt)
+      currAnt++
     }
   }
   
-  animateAnt(pathsData, ant, room, i, last) {
-    let fromX = this.antPrevRoom[ant].left + RADIUS - RADIUSANT
-    let fromY = this.antPrevRoom[ant].top + RADIUS - RADIUSANT
+  animateAnt(pathsData, ant, room, stepInd, isFirstAnt, isLastAnt) {
+    const fromX = this.antPrevRoom.get(ant).left + RADIUS - RADIUSANT
+    const fromY = this.antPrevRoom.get(ant).top + RADIUS - RADIUSANT
   
-    let toX = this.rooms[room].left + RADIUS - RADIUSANT
-    let toY = this.rooms[room].top + RADIUS - RADIUSANT
+    const toX = this.rooms.get(room).left + RADIUS - RADIUSANT
+    const toY = this.rooms.get(room).top + RADIUS - RADIUSANT
   
-    let dx = (toX - fromX) / END
-    let dy = (toY - fromY) / END
+    const dx = (toX - fromX) / END
+    const dy = (toY - fromY) / END
     
     fabric.util.animate({
       startValue: 0,
       endValue: END,
       duration: 1000,
       onChange: value => {
-        let x = dx * value
-        let y = dy * value
-        this.ants[ant].set({left: fromX + x, top: fromY + y})
-        if (last) {
+        if (!this.ants.has(ant)) return
+
+        const x = dx * value
+        const y = dy * value
+
+        this.ants.get(ant).set({left: fromX + x, top: fromY + y})
+
+        if (isLastAnt) {
           this.canvas.renderAll()
         }
       },
       onComplete: () => {
-        if (pathsData.steps[i] && !this.animated[i]) {
-          for (const [ant, room] of pathsData.steps[i].entries()) {
-            this.antPrevRoom[ant] = this.rooms[room]
-          }
-          this.animated[i] = true
-          if (pathsData.steps[i+1]) {
-            setTimeout(this.animate(pathsData, i+1), 1000)
-          } else {
-            this.completed()
-          }
+        if (!isFirstAnt) return
+
+        for (const [ant, room] of pathsData.steps[stepInd].entries()) {
+          this.antPrevRoom.set(ant, this.rooms.get(room))
         }
-        
+
+        if (stepInd === pathsData.steps.length - 1) {
+          this.finishAnimation()
+          return
+        }
+
+        setTimeout(this.animateStep(pathsData, stepInd+1), 1000)
       }
     })
   }
 
-  show(textShow) {
-    if (this.pressed) {
-      return
-    }
-    this.pressed = true
-    
-    let span = document.createElement('span')
-    let text = document.createTextNode(textShow)
-    span.appendChild(text)
-    span.classList.add('tag', 'is-large', 'is-warning')
-  
-    let div = document.getElementById('show')
-  
-    div.appendChild(span)
-  
-    div.style.position = 'absolute'
-    div.style.left = '50%'
-    div.style.zIndex = 100
-    div.style.paddingTop = '5em'
-  
-    setTimeout(() => {
-      let op = 1
-      let timer = setInterval(() => {
-        if (op <= 0.1){
-          clearInterval(timer)
-          span.remove()
-          div.removeAttribute('style')
-          this.pressed = false
-        }
-        span.style.opacity = op
-        span.style.filter = 'alpha(opacity=' + op * 100 + ')'
-        op -= op * 0.1
-      }, 30)
-    }, 2000)
-  }
+  finishAnimation() {
+    this.enableNavbar()
 
-  completed() {
-    this.animation = false
-  
-    for (let i=0; i<this.numAnts; i++) {
-      this.canvas.remove(this.ants[i+1])
+    for (const ant of this.ants.values()) {
+      this.canvas.remove(ant)
     }
-    this.animated = []
-    this.ants = {}
-    this.antPrevRoom = {}
+
+    this.ants = new Map()
+    this.antPrevRoom = new Map()
   }
 }
 
@@ -313,8 +286,8 @@ class ToggleInfo {
 }
 
 function burger() {
-  let burger = document.querySelector('.burger')
-  let menu = document.querySelector('#'+burger.dataset.target);
+  const burger = document.querySelector('.burger')
+  const menu = document.querySelector('#'+burger.dataset.target);
   burger.addEventListener('click', function() {
       burger.classList.toggle('is-active')
       menu.classList.toggle('is-active')

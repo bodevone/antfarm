@@ -23,9 +23,8 @@ function getGraphPaths(graph) {
 }
 
 function getPaths(graph) {
-  if (!suurballe(graph)) {
-    return null
-  }
+  if (!suurballe(graph)) return null
+
   return getGraphPaths(graph)
 }
 
@@ -36,12 +35,9 @@ function findBestPaths(graph) {
   }
   for (let i=1; i++; i<graph.numAnts) {
     let currPaths = getPaths(graph)
-    if (currPaths == null) {
-      break
-    }
-    if (currPaths.numSteps < bestPaths.numSteps) {
-      bestPaths = currPaths
-    }
+    if (currPaths == null) break
+
+    if (currPaths.numSteps < bestPaths.numSteps) bestPaths = currPaths
   }
   return bestPaths
 }
@@ -67,18 +63,15 @@ function formatPaths(paths, numAnts) {
       }
     }
     for (let i=0; i<paths.numPaths; i++) {
-      if (antNum > numAnts) {
-        break
-      }
-      if (paths.assignment[i] <= 0) {
-        continue
-      }
+      if (antNum > numAnts) break
+      if (paths.assignment[i] <= 0) continue
+
       paths.assignment[i]--
       currStep.set(antNum, paths.allPaths[i].front().value)
       m.set(antNum, paths.allPaths[i].front().next)
       antNum++
     }
-    steps.push(currStep)
+    if (currStep.size > 0) steps.push(currStep)
     lastAnt = antNum - 1
   }
   result["steps"] = steps

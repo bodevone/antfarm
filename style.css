@@ -12,6 +12,15 @@ body {
     opacity: 0.4;
 }
 
+.navbar {
+    opacity: 1;
+}
+
+.navbar.disabled {
+    opacity: 0.4;
+}
+
+
 #c {
     margin: 0;
     overflow: hidden   
@@ -62,8 +71,6 @@ input[type="range"]::-webkit-slider-thumb:active {
     overflow-y: scroll;
     display: block;
     justify-content: center;
-    /* width: 65%;
-    height: 70%; */
     z-index: 100;
     background: #fff;
     border-radius: 5px;

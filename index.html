@@ -20,7 +20,7 @@
           
           <p style="padding-bottom: 1em;">Visualise the movement of ants on an ant farm</p>
           
-          <p>- <span style="color: #e9d358; font-weight: 500;">Generate an Example</span> </p>
+          <p>- <span style="color: #e9d358; font-weight: 500;">Generate a random Graph</span> </p>
           <p>- Select a <span style="color: #7e8f88; font-weight: 500;">Number of Ants</span></p>
           <p>- Press <span style="color: #14A76C; font-weight: 500;">Run</span> to see your ants in action!</p>
           <p>Enjoy! 🙌 </p>
@@ -36,53 +36,53 @@
       </div>
   
       <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="container">
-          <div class="navbar-brand">
-            <a class="navbar-item" href="">
-              <strong>AntFarm</strong>
-            </a>
-            <span class="navbar-burger burger" data-target="navbarMenu">
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
-    
-            <div id="navbarMenu" class="navbar-menu">
-    
-              <div class="navbar-start">
-                <div class="navbar-item">
-                  <span class="tag is-light is-medium">
-                    <p>
-                      Number of Ants: <strong><span id="ants">1</span></strong>
-                    </p>
-                  </span>
-                </div>
-    
-                <div class="navbar-item">
-                  <input id="rangePicker" type="range" step="1" min="1" max="100" value="1">
-                </div>
-
-                <span class="navbar-item">
-                  <a class="button is-warning" id="example">
-                    Generate Example
-                  </a>
-                </span>
-  
-              </div>
+        <div class="navbar-brand" style="margin-right: 8%">
           
-              <div class="navbar-end">
-                <div class="navbar-item">
-                  <img id="info" src="assets/info.png">
-                </div>
-  
-                <span class="navbar-item">
-                  <a class="button is-primary" id="start">
-                    <strong>Run</strong>
-                  </a>
-                </span>
-              </div>
+
+          <a class="navbar-item" href="">
+            <img src="assets/logo.png" width="28" height="28" alt="Antfarm logo">
+            <span class="has-text-weight-bold" style="margin-left: 5px;">AntFarm</span>
+          </a>
+
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div id="navbarMenu" class="navbar-menu">
+
+          <div class="navbar-start">
+
+            <div class="navbar-item">
+              <span class="tag is-light is-medium">
+                <p>
+                  Number of Ants: <strong><span id="ants">1</span></strong>
+                </p>
+              </span>
             </div>
-            
+
+            <div class="navbar-item">
+              <input id="rangePicker" type="range" step="1" min="1" max="100" value="1">
+            </div>
+
+            <span class="navbar-item">
+              <button class="button is-warning" id="graphGenerator">
+                Generate Graph
+              </button>
+            </span>
+
+            <div class="navbar-item">
+              <img id="info" src="assets/info.png">
+            </div>
+
+            <span class="navbar-item">
+              <button class="button is-primary" id="start">
+                <strong>Run</strong>
+              </button>
+            </span>
+
           </div>
         </div>
       </nav>
